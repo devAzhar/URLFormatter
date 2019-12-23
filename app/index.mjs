@@ -1,5 +1,4 @@
 import lodash from 'lodash';
-import { isNumber } from 'util';
 const { get } = lodash;
 
 export const HelloWorld = (request, h) => {
@@ -69,12 +68,53 @@ export const ExecuteTermRangesHandler = (request, h) => {
     const ranges = request.payload;
     return ExecuteTermRanges(ranges);
 };
+const getAsciiValue = data => {
+    let result = 0;
+
+    data.split('').forEach(element => {
+        result += element.charCodeAt(0);
+    });
+
+    return result;
+}
+
+const cartesianProductOf = () => {
+    return _.reduce(arguments, function(a, b) {
+        return _.flatten(_.map(a, function(x) {
+            return _.map(b, function(y) {
+                return x.concat([y]);
+            });
+        }), true);
+    }, [ [] ]);
+}
+
 export const ExecuteTermRanges = ranges => {
     const result = new Array();
-
+    // terms = [];
+    // terms.push(['a', 'b']);
+    // terms.push(['00', '01', '02']);
+    // terms.push(['c']);
+    // terms.push(['00', '01', '02', '03', '04', '05']);
+    
     ranges.forEach(element => {
         result.push({isAlpha: element.isAlpha, isNumber: element.isNumber, rangeStart: element.rangeStart, rangeEnd: element.rangeEnd});
     });
+
+    var data = "";
+
+    for (var index = result.length; index >= 0; index--) {
+        
+        // let val = getAsciiValue(result[index].rangeStart);
+        // const endVal = getAsciiValue(result[index].rangeEnd);
+
+        // for(var j = 0; j < index; j++) {
+        //     data += result[j].rangeStart;
+        // }
+
+        // while(val++ <= endVal) {
+            
+        // }
+    }
 
     return result;
 };

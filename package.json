@@ -6,7 +6,8 @@
   "dependencies": {
     "@hapi/inert": "^5.2.2",
     "hapi": "^18.1.0",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "underscore": "^1.9.1"
   },
   "devDependencies": {},
   "main": "index.ts",
