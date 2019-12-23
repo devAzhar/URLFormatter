@@ -68,6 +68,24 @@ export const ExecuteTermRangesHandler = (request, h) => {
     const ranges = request.payload;
     return ExecuteTermRanges(ranges);
 };
+
+const getNextElement = (term, length = 1, paddChar = '') => {
+    let nextElement = null;
+
+    if(isNaN(term)) {
+        const ascii = term.charCodeAt(0);
+        nextElement = String.fromCharCode(ascii + 1); 
+    } else {
+        nextElement = (parseInt(term) + 1).toString();
+
+        while(nextElement.length < length) {
+            nextElement = '0' + nextElement;
+        }
+    }
+
+    return {term: nextElement, value: getAsciiValue(nextElement)};
+};
+
 const getAsciiValue = data => {
     let result = 0;
 
@@ -87,7 +105,6 @@ const cartesianProductOf = (args) => {
         }), true);
     }, [ [] ]);
 
-    console.log(reducedArray);
     const returnArray = new Array();
 
     reducedArray.forEach(element => {
@@ -96,34 +113,33 @@ const cartesianProductOf = (args) => {
     return returnArray;
 }
 
-export const ExecuteTermRanges = ranges => {
-    const result = new Array();
-    const terms = [];
-    terms.push(['a', 'b']);
-    terms.push(['00', '01', '02']);
-    terms.push(['c']);
-    terms.push(['00', '01', '02', '03', '04', '05']);
-    return cartesianProductOf(terms);
+const getTermArray = ranges => {
+    const termsArray = new Array();
+    let nextTerm = '';
 
-    ranges.forEach(element => {
-        result.push({isAlpha: element.isAlpha, isNumber: element.isNumber, rangeStart: element.rangeStart, rangeEnd: element.rangeEnd});
+    ranges.forEach(range => {
+        const term = new Array();
+        const endVal = getAsciiValue(range.rangeEnd);
+        nextTerm = {term: range.rangeStart};
+
+        if (range.rangeStart) {
+            term.push(range.rangeStart);
+
+            while((nextTerm = getNextElement(nextTerm.term, range.rangeEnd.length)).value <= endVal) {
+                term.push(nextTerm.term);
+            }
+        } 
+        
+        if (term.length > 0) {
+            termsArray.push(term);
+        }
     });
 
-    var data = "";
+    return termsArray;
+};
 
-    for (var index = result.length; index >= 0; index--) {
-        
-        // let val = getAsciiValue(result[index].rangeStart);
-        // const endVal = getAsciiValue(result[index].rangeEnd);
-
-        // for(var j = 0; j < index; j++) {
-        //     data += result[j].rangeStart;
-        // }
-
-        // while(val++ <= endVal) {
-            
-        // }
-    }
-
-    return result;
+export const ExecuteTermRanges = ranges => {
+    const result = new Array();
+    const terms = getTermArray(ranges);
+    return cartesianProductOf(terms);
 };
