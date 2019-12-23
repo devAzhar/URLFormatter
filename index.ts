@@ -8,7 +8,7 @@ import { HelloWorld, GenerateUrls, ExecuteTermRangesHandler } from './app/index.
 
 const init = async () => {
     const HOST_NAME = `localhost`;
-    const PORT = 8081;
+    const PORT = 8089;
 
     const server = Hapi.server({
         port: PORT,

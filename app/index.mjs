@@ -1,5 +1,5 @@
 import lodash from 'lodash';
-const { get } = lodash;
+const { get, reduce, flatten, map } = lodash;
 
 export const HelloWorld = (request, h) => {
     return {Message: 'HelloWorld!'};
@@ -78,24 +78,33 @@ const getAsciiValue = data => {
     return result;
 }
 
-const cartesianProductOf = () => {
-    return _.reduce(arguments, function(a, b) {
-        return _.flatten(_.map(a, function(x) {
-            return _.map(b, function(y) {
+const cartesianProductOf = (args) => {
+    const reducedArray = reduce(args, function(a, b) {
+        return flatten(map(a, function(x) {
+            return map(b, function(y) {
                 return x.concat([y]);
             });
         }), true);
     }, [ [] ]);
+
+    console.log(reducedArray);
+    const returnArray = new Array();
+
+    reducedArray.forEach(element => {
+        returnArray.push(element.join(''));
+    });
+    return returnArray;
 }
 
 export const ExecuteTermRanges = ranges => {
     const result = new Array();
-    // terms = [];
-    // terms.push(['a', 'b']);
-    // terms.push(['00', '01', '02']);
-    // terms.push(['c']);
-    // terms.push(['00', '01', '02', '03', '04', '05']);
-    
+    const terms = [];
+    terms.push(['a', 'b']);
+    terms.push(['00', '01', '02']);
+    terms.push(['c']);
+    terms.push(['00', '01', '02', '03', '04', '05']);
+    return cartesianProductOf(terms);
+
     ranges.forEach(element => {
         result.push({isAlpha: element.isAlpha, isNumber: element.isNumber, rangeStart: element.rangeStart, rangeEnd: element.rangeEnd});
     });
