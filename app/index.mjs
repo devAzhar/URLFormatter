@@ -122,11 +122,22 @@ const getTermArray = ranges => {
         const endVal = getAsciiValue(range.rangeEnd);
         nextTerm = {term: range.rangeStart};
 
-        if (range.rangeStart) {
-            term.push(range.rangeStart);
+        if (range.rangeStart.length === range.rangeEnd.length) {
+            
+            if (!isNaN(range.rangeStart) || range.rangeStart.length === 1) {
+                term.push(range.rangeStart);
 
-            while((nextTerm = getNextElement(nextTerm.term, range.rangeEnd.length)).value <= endVal) {
-                term.push(nextTerm.term);
+                while((nextTerm = getNextElement(nextTerm.term, range.rangeEnd.length)).value <= endVal) {
+                    term.push(nextTerm.term);
+                }
+            } else {
+                const temp = [['x', 'y'], ['A','B','C'], ['a','b','c','d']];
+                const res = cartesianProductOf(temp);
+                console.log(`HANDLE -> xAa -> yCd`);
+
+                res.forEach(element => {
+                    term.push(element);
+                });
             }
         } 
         
@@ -135,6 +146,7 @@ const getTermArray = ranges => {
         }
     });
 
+    console.log(termsArray);
     return termsArray;
 };
 
