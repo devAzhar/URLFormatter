@@ -64,9 +64,9 @@ export const GenerateUrls = (request, h) => {
     return {params: request.params, urlFormat: urlFormat, terms};
 }
 
-export const ExecuteTermRangesHandler = (request, h) => {
-    const ranges = request.payload;
-    return ExecuteTermRanges(ranges);
+export const ExecuteTermRangesHandler = (request, _h) => {
+    const ranges = request.payload.terms || request.payload;
+    return ExecuteTermRanges(ranges, request.payload.meta);
 };
 
 const getNextElement = (term, length = 1, paddChar = '') => {
@@ -170,8 +170,21 @@ const getTermArray = ranges => {
     return termsArray;
 };
 
-export const ExecuteTermRanges = ranges => {
-    const result = new Array();
+export const ExecuteTermRanges = (ranges, meta) => {
     const terms = getTermArray(ranges);
-    return cartesianProductOf(terms);
+    const data = cartesianProductOf(terms);
+    var returnData = new Array();
+    var maxTerms = meta.maxTerms || data.length;
+    
+    data.forEach((element, index) => {
+        if (index <= maxTerms) {
+            returnData.push(element);
+        }
+    });
+
+    console.log(data.length);
+    // returnData = returnData.replace(/aaa/g, 'G');
+    // returnData = "meta";
+    // console.log(meta);
+    return returnData;
 };
