@@ -131,9 +131,29 @@ const getTermArray = ranges => {
                     term.push(nextTerm.term);
                 }
             } else {
-                const temp = [['x', 'y'], ['A','B','C'], ['a','b','c','d']];
-                const res = cartesianProductOf(temp);
-                console.log(`HANDLE -> xAa -> yCd`);
+                const listOfTerms = new Array();
+                console.log(`HANDLE -> ${range.rangeStart} -> ${range.rangeEnd}`);
+
+                range.rangeStart.split('').forEach((element, index) => {
+                    const innerTerms = new Array();
+                    const termEndVal = getAsciiValue(range.rangeEnd[index]);
+                    
+                    innerTerms.push(element);
+                    nextTerm = {term: element};
+
+                    while((nextTerm = getNextElement(nextTerm.term, element.length)).value <= termEndVal) { 
+                        innerTerms.push(nextTerm.term);
+                    };
+
+                    listOfTerms.push(innerTerms);
+                });
+
+                // const temp = [['x', 'y'], ['A','B','C'], ['a','b','c','d']];
+                // const res = cartesianProductOf(temp);
+                // console.log(temp);
+                // console.log(listOfTerms);
+
+                const res = cartesianProductOf(listOfTerms);
 
                 res.forEach(element => {
                     term.push(element);
@@ -146,7 +166,7 @@ const getTermArray = ranges => {
         }
     });
 
-    console.log(termsArray);
+    // console.log(termsArray);
     return termsArray;
 };
 
