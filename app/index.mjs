@@ -184,21 +184,22 @@ export const ExecuteTermRanges = request => {
     var $token = get(meta, 'requestToken', '') || getGUID('');
     const $dataSessionKey = 'sdata_' + $token.substring(0, 8);
 
+    // For force load, clear previous session data if any
+    if (forceLoad) {
+        set(session, $dataSessionKey, []);
+    }
+
     let data = [];
 
-    if (!forceLoad) {
-        console.log(`Trying to load from session - ${new Date()}.`);
-        data = get(session, $dataSessionKey, data);
-    }
+    console.log(`Trying to load from session - ${new Date()}.`);
+    data = get(session, $dataSessionKey, data);
 
     if (data.length === 0) {
         console.log(`Making the call to => getTermArray`);
         const terms = getTermArray(ranges);
         data = cartesianProductOf(terms);
 
-        if (!forceLoad) {
-            set(session, $dataSessionKey, data);
-        }
+        set(session, $dataSessionKey, data);
     } else {
         console.log(`Data Loaded from the session - ${new Date()}.`);
     }

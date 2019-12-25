@@ -16,7 +16,7 @@ const init = async () => {
     });
 
     await server.register(Inert);
-    
+
     await server.register({
         plugin: HapiServerSession,
         options: {
@@ -67,7 +67,6 @@ const init = async () => {
 };
 
 process.on('unhandledRejection', (err) => {
-
     console.log(err);
     process.exit(1);
 });
