@@ -1,6 +1,7 @@
 'use strict';
 
 import Hapi from 'hapi';
+import HapiServerSession from 'hapi-server-session';
 
 import { HelloWorld, GenerateUrls, ExecuteTermRangesHandler } from './app/index.mjs'
 
@@ -15,6 +16,15 @@ const init = async () => {
         host: HOST_NAME
     });
 
+    await server.register({
+        plugin: HapiServerSession,
+        options: {
+          cookie: {
+            isSecure: false, // never set to false in production
+          },
+        },
+      });
+    
     server.route({
         method: 'GET',
         path: '/_health',

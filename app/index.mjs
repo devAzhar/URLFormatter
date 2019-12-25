@@ -1,5 +1,5 @@
 import lodash from 'lodash';
-const { get, reduce, flatten, map } = lodash;
+const { get, reduce, flatten, map, set } = lodash;
 
 export const HelloWorld = (request, h) => {
     return {Message: 'HelloWorld!'};
@@ -64,10 +64,13 @@ export const GenerateUrls = (request, h) => {
     return {params: request.params, urlFormat: urlFormat, terms};
 }
 
-export const ExecuteTermRangesHandler = (request, _h) => {
-    const ranges = request.payload.terms || request.payload;
-    return ExecuteTermRanges(ranges, request.payload.meta);
+const getGUID = (separator='-') => {
+    const S4 = () => ((((1+Math.random())*0x10000)|0).toString(16).substring(1));
+    // then to call it, plus stitch in '4' in the third group
+    return (S4() + S4() + separator + S4() + separator + S4().substr(0,3) + separator + S4() + separator + S4() + S4() + S4()).toLowerCase();
 };
+
+export const ExecuteTermRangesHandler = (request, _h) => ExecuteTermRanges(request);
 
 const getNextElement = (term, length = 1, paddChar = '') => {
     let nextElement = null;
@@ -170,21 +173,59 @@ const getTermArray = ranges => {
     return termsArray;
 };
 
-export const ExecuteTermRanges = (ranges, meta) => {
-    const terms = getTermArray(ranges);
-    const data = cartesianProductOf(terms);
-    var returnData = new Array();
-    var maxTerms = meta.maxTerms || data.length;
+export const ExecuteTermRanges = request => {
+    const startTime = new Date();
+    const payload = get(request, 'payload', {});
+    const session = get(request, 'session', {});
+    const ranges = get(payload, 'terms', payload);
+    const meta = get(payload, 'meta', {});
     
-    data.forEach((element, index) => {
-        if (index <= maxTerms) {
-            returnData.push(element);
-        }
-    });
+    const forceLoad = get(payload, 'forceLoad', false);
+    var $token = get(meta, 'requestToken', getGUID(''));
+    const $dataSessionKey = 'sdata_' + $token.substring(0, 8);
 
-    console.log(data.length);
-    // returnData = returnData.replace(/aaa/g, 'G');
-    // returnData = "meta";
-    // console.log(meta);
-    return returnData;
+    let data = [];
+
+    if (!forceLoad) {
+        console.log(`Trying to load from session - ${new Date()}.`);
+        data = get(session, $dataSessionKey, data);
+    }
+
+    if (data.length === 0) {
+        console.log(`Making the call to => getTermArray`);
+        const terms = getTermArray(ranges);
+        data = cartesianProductOf(terms);
+        set(session, $dataSessionKey, data);
+    } else {
+        console.log(`Data Loaded from the session - ${new Date()}.`);
+    }
+
+    const startIndex = meta.startIndex || 0;
+    var maxTerms = meta.maxTerms || data.length;
+
+    console.log($token);
+    console.log($dataSessionKey);
+
+    maxTerms = maxTerms-startIndex > data.length ? data.length : maxTerms;
+    const returnData = data.slice(startIndex, startIndex + maxTerms);
+
+    const hasMoreRecords = startIndex + maxTerms < data.length ? true : false;
+
+    if (!hasMoreRecords) {
+        set(session, $dataSessionKey, []);
+    }
+
+    const endTime = new Date();
+
+    return {
+        info: {
+            totalLength: data.length,
+            returnedLength: returnData.length,
+            requestToken: $token,
+            startIndex: startIndex,
+            hasMoreRecords,
+            timeTaken: `${(endTime-startTime)/1000} seconds`
+        },
+        data: returnData,
+    };
 };
