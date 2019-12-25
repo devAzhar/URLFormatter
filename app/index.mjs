@@ -54,7 +54,6 @@ export const ParseTerms = urlFormat => {
     return terms;
 };
 
-
 export const GenerateUrls = (request, h) => {
     console.log(`Method: GenerateUrls -> Start ${new Date()}`);
     const urlFormat = get(request.params, 'urlFormat', '').trim();
@@ -174,6 +173,7 @@ const getTermArray = ranges => {
 };
 
 export const ExecuteTermRanges = request => {
+    try {
     const startTime = new Date();
     const payload = get(request, 'payload', {});
     const session = get(request, 'session', {});
@@ -181,7 +181,7 @@ export const ExecuteTermRanges = request => {
     const meta = get(payload, 'meta', {});
     
     const forceLoad = get(payload, 'forceLoad', false);
-    var $token = get(meta, 'requestToken', getGUID(''));
+    var $token = get(meta, 'requestToken', '') || getGUID('');
     const $dataSessionKey = 'sdata_' + $token.substring(0, 8);
 
     let data = [];
@@ -195,7 +195,10 @@ export const ExecuteTermRanges = request => {
         console.log(`Making the call to => getTermArray`);
         const terms = getTermArray(ranges);
         data = cartesianProductOf(terms);
-        set(session, $dataSessionKey, data);
+
+        if (!forceLoad) {
+            set(session, $dataSessionKey, data);
+        }
     } else {
         console.log(`Data Loaded from the session - ${new Date()}.`);
     }
@@ -228,4 +231,7 @@ export const ExecuteTermRanges = request => {
         },
         data: returnData,
     };
+    } catch (_exp) {
+        console.log(_exp);
+    }
 };

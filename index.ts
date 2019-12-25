@@ -2,10 +2,9 @@
 
 import Hapi from 'hapi';
 import HapiServerSession from 'hapi-server-session';
+import Inert from '@hapi/inert';
 
 import { HelloWorld, GenerateUrls, ExecuteTermRangesHandler } from './app/index.mjs'
-
-// const Inert = require('@hapi/inert');
 
 const init = async () => {
     const HOST_NAME = `localhost`;
@@ -16,6 +15,8 @@ const init = async () => {
         host: HOST_NAME
     });
 
+    await server.register(Inert);
+    
     await server.register({
         plugin: HapiServerSession,
         options: {
@@ -24,7 +25,25 @@ const init = async () => {
           },
         },
       });
-    
+
+    server.route({
+        method: 'GET',
+        path: '/api/js',
+        handler: (request, h) => {
+            request;
+            return h.file('./app/dist/url-generator-browser-script.min.js');
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/app',
+        handler: (request, h) => {
+            request;
+            return h.file('./app/index.html');
+        }
+    });
+
     server.route({
         method: 'GET',
         path: '/_health',
