@@ -4,7 +4,7 @@
         <title>URL Generator ...</title> 
         <link href='//maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' rel='stylesheet' type='text/css' media='all' />
         <script type="text/javascript" src="//code.jquery.com/jquery-1.12.4.min.js"></script>
-        <script type="text/javascript" src="../api/js"></script>
+        <script type="text/javascript" src="../../api/v1/js"></script>
 
         <style type="text/css"></style>
         
@@ -25,24 +25,14 @@
 
                     <form>
                         <div class="form-group">
-                            <label for="baseURL">Base URL</label>
-                            <input type="text" class="form-control" id="baseURL" placeholder="Base URL" />
+                            <label for="baseURL">URL</label>
+                            <input type="text" class="form-control" id="baseURL" placeholder="Enter URL with format e.g. http://domain.com/ab12cc22" />
                         </div>
                         <div class="form-group">
                             <label for="pageSize">Page Size</label>
                             <input type="number" class="form-control" id="pageSize" placeholder="Page Size" value="100" />
                         </div>
-                        <div class="form-group">
-                            <label for="exampleInputFile">File input</label>
-                            <input type="file" id="exampleInputFile">
-                            <p class="help-block">Example block-level help text here.</p>
-                        </div>
-                        <div class="checkbox">
-                            <label>
-                            <input type="checkbox"> Check me out
-                            </label>
-                        </div>
-                        <button type="submit" class="btn btn-default">Submit</button>
+                        <button type="button" class="btn btn-primary btn-get-terms">Get Terms</button>
                     </form>
                 </div>
             </div>

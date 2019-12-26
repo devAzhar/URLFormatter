@@ -28,7 +28,7 @@ const init = async () => {
 
     server.route({
         method: 'GET',
-        path: '/api/js',
+        path: '/api/v1/js',
         handler: (request, h) => {
             request;
             return h.file('./app/dist/url-generator-browser-script.min.js');
@@ -37,10 +37,10 @@ const init = async () => {
 
     server.route({
         method: 'GET',
-        path: '/app',
+        path: '/app/v1',
         handler: (request, h) => {
             request;
-            return h.file('./app/index.html');
+            return h.file('./app/html/index.html');
         }
     });
 
@@ -52,13 +52,13 @@ const init = async () => {
 
     server.route({
         method: 'POST',
-        path: '/api/execute',
+        path: '/api/v1/execute',
         handler: ExecuteTermRangesHandler
     });
 
     server.route({
         method: 'GET',
-        path: '/{urlFormat}',
+        path: '/api/v1/{urlFormat}',
         handler: GenerateUrls
     });
 
