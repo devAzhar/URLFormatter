@@ -6,7 +6,18 @@
         <script type="text/javascript" src="//code.jquery.com/jquery-1.12.4.min.js"></script>
         <script type="text/javascript" src="../../api/v1/js"></script>
 
-        <style type="text/css"></style>
+        <style type="text/css">
+            .alpha-true {
+                background-color: lightgreen;
+                padding-left: 2px;
+                padding-right: 2px;
+            }
+            .alpha-false {
+                padding-left: 2px;
+                padding-right: 2px;
+                background-color: rgb(238, 158, 158);
+            }
+        </style>
         
         <script type="text/javascript">
         </script>
@@ -14,7 +25,7 @@
 
     <body>
         <div id="urlGenerator" class='container pt-5'>
-            <div class="row">
+            <div class="row card p-5">
                 <div class="col-md-2"></div>
                 <div class="col-md-8">
 
@@ -34,6 +45,11 @@
                         </div>
                         <button type="button" class="btn btn-primary btn-get-terms">Get Terms</button>
                     </form>
+
+                    <div class='row-terms'>
+                        <div class='terms-url'></div>
+                        <div class='terms-list pt-4'></div>
+                    </div>
                 </div>
             </div>
         </div>

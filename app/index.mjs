@@ -1,7 +1,7 @@
 import lodash from 'lodash';
 const { get, reduce, flatten, map, set } = lodash;
 
-export const HelloWorld = (request, h) => {
+export const HelloWorld = (_request, _h) => {
     return {Message: 'HelloWorld!'};
 }
 
@@ -60,7 +60,8 @@ export const GenerateUrls = (request, h) => {
     
     const terms = ParseTerms(urlFormat);
     console.log(`Method: GenerateUrls -> End ${new Date()}`);
-    return {params: request.params, urlFormat: urlFormat, terms};
+    return {urlFormat: urlFormat, terms};
+    // params: request.params, 
 }
 
 const getGUID = (separator='-') => {
