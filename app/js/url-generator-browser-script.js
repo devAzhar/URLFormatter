@@ -1,5 +1,9 @@
 //IIFI
 (() => {
+  const Constants = {
+    ApiRoot: '../../api/v1/'
+  };
+
   const getAsciiValue = data => {
     let result = 0;
 
@@ -10,8 +14,26 @@
     return result;
   }
 
-  const ShowMessage = msg => {
-    alert(msg);
+  const HideMessage = () => $('.error-container').addClass('d-none');
+
+  const ShowMessage = (msg, autoHideAfter = 0, isError = true) => {
+    const $error = $('.error-container');
+
+    if($error.length === 0) {
+      alert(msg);
+      return;
+    }
+
+    const $alert = $error.find('.alert');
+    $alert.html(msg);
+    $alert.removeClass('alert-danger').removeClass('alert-success').addClass(`alert-${isError ? 'danger' : 'success'}`);
+    $error.removeClass('d-none');
+
+    if (autoHideAfter > 0) {
+      setTimeout(() => {
+        $error.addClass('d-none');
+      }, autoHideAfter);
+    }
   };
   const ConsoleLog = (msg, _error = false) => {
     if (_error) {
@@ -65,6 +87,11 @@
     });
 
     $html += `
+          <tr class='row-term-footer'>
+            <td colspan='4'>
+              <button type="button" class="btn btn-primary btn-generate-urls">Generate URLs</button>  
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -74,25 +101,40 @@
   };
 
   $(document).ready(() => {
+    const $baseURL = $('#baseURL');
+    const $rowTerms = $('.row-terms');
+
+    $baseURL.on('change', evt => {
+      HideMessage();
+      $rowTerms.hide();
+    });
+
     $('.btn-get-terms').on('click', evt => {
-      const $baseURL = $('#baseURL').val();
+      HideMessage();
       
-      const $urlParts = $baseURL.replace('http://', '').replace('https://', '').split('/');
+      const $urlParts = $baseURL.val().replace('http://', '').replace('https://', '').split('/');
       const termsPart = $urlParts.pop();
       if (!termsPart || $urlParts.length === 0) {
         ShowMessage(`Invalid URL Format.`);
         return;
       };
 
-      const domainName = $baseURL.replace(termsPart, '');
-      var $apiRoot  = '../../api/v1/'
+      $rowTerms.show();
+      const domainName = $baseURL.val().replace(termsPart, '');
+      const url = `${Constants.ApiRoot}${termsPart}`;
 
-      $.get(`${$apiRoot}${termsPart}`).then(data => displayTerms(data, domainName));
+      $.get(url).then(data => displayTerms(data, domainName));
+    });
 
-      $(document).on('change', '.text-term', event => {
-        const that = $(eval('this'));
-        ConsoleLog(that.data());
-      });
+    $(document).on('click', '.btn-generate-urls', event => {
+      HideMessage();
+      const $this = $(eval('this'));
+      ConsoleLog($this);
+    });
+    
+    $(document).on('change', '.text-term', event => {
+      const $this = $(eval('this'));
+      ConsoleLog($this.data());
     });
   });
   
