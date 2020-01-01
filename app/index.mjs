@@ -91,10 +91,15 @@ const getNextElement = (term, length = 1, paddChar = '') => {
 
 const getAsciiValue = data => {
     let result = 0;
+    const isNum = !isNaN(data);
 
-    data.split('').forEach(element => {
-        result += element.charCodeAt(0);
-    });
+    if(isNum) {
+        result = parseInt(data);
+    } else {
+        data.split('').forEach((element, index) => {
+            result += (index+1) * element.charCodeAt(0);
+        });
+    }
 
     return result;
 }
@@ -126,7 +131,6 @@ const getTermArray = ranges => {
         nextTerm = {term: range.rangeStart};
 
         if (range.rangeStart.length === range.rangeEnd.length) {
-            
             if (!isNaN(range.rangeStart) || range.rangeStart.length === 1) {
                 term.push(range.rangeStart);
 
@@ -143,7 +147,6 @@ const getTermArray = ranges => {
                     
                     innerTerms.push(element);
                     nextTerm = {term: element};
-
                     while((nextTerm = getNextElement(nextTerm.term, element.length)).value <= termEndVal) { 
                         innerTerms.push(nextTerm.term);
                     };

@@ -17,6 +17,9 @@
                 padding-right: 2px;
                 background-color: rgb(238, 158, 158);
             }
+            .term-output ul, term-output ul li {
+                list-style-type: none;
+            }
         </style>
         
         <script type="text/javascript">
@@ -40,7 +43,7 @@
                             <label for="baseURL">URL</label>
                             <input type="text" class="form-control" id="baseURL" placeholder="Enter URL with format e.g. http://domain.com/ab12cc22" />
                         </div>
-                        <div class="form-group">
+                        <div class="form-group d-none">
                             <label for="pageSize">Page Size</label>
                             <input type="number" class="form-control" id="pageSize" placeholder="Page Size" value="100" />
                         </div>
@@ -50,6 +53,8 @@
                     <div class='row-terms'>
                         <div class='terms-url'></div>
                         <div class='terms-list pt-4'></div>
+                        <div class='term-output'>
+                        </div>
                     </div>
                 </div>
             </div>
