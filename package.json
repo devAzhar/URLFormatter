@@ -1,0 +1,31 @@
+{
+  "name": "js-report-viewer",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@babel/runtime": "^7.7.4",
+    "@hapi/inert": "^5.2.2",
+    "hapi": "^18.1.0",
+    "hapi-server-session": "^4.3.2",
+    "lodash": "^4.17.15",
+    "uglify-js": "^3.7.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.7.4",
+    "@babel/core": "^7.7.4",
+    "@babel/node": "^7.7.4",
+    "@babel/plugin-transform-runtime": "^7.7.4",
+    "@babel/preset-env": "^7.7.4"
+  },
+  "main": "index.ts",
+  "scripts": {
+    "build": "babel app/js -d app/dist",
+    "dev": "uglifyjs app/dist/url-generator-browser-script.js -o app/dist/url-generator-browser-script.min.js",
+    "start": "node --experimental-modules ./index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

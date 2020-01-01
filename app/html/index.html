@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>URL Generator ...</title> 
+        <link href='//maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' rel='stylesheet' type='text/css' media='all' />
+        <script type="text/javascript" src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+        <script type="text/javascript" src="../../api/v1/js"></script>
+
+        <style type="text/css">
+            .alpha-true {
+                background-color: lightgreen;
+                padding-left: 2px;
+                padding-right: 2px;
+            }
+            .alpha-false {
+                padding-left: 2px;
+                padding-right: 2px;
+                background-color: rgb(238, 158, 158);
+            }
+            .term-output ul, term-output ul li {
+                list-style-type: none;
+            }
+        </style>
+        
+        <script type="text/javascript">
+        </script>
+    </head>
+
+    <body>
+        <div id="urlGenerator" class='container pt-5'>
+            <div class="row card p-5">
+                <div class="col-md-12 error-container d-none">
+                    <div class="alert alert-danger" role="alert"></div>
+                </div>
+                <div class="col-md-12">
+                    <div class='text-center loader d-none'>
+                        <div class='spinner-border' style='width: 3rem; height: 3rem;' role='status'></div>
+                        <div class='spinner-grow' style='width: 3rem; height: 3rem;' role='status'></div>
+                    </div>
+
+                    <form>
+                        <div class="form-group">
+                            <label for="baseURL">URL</label>
+                            <input type="text" class="form-control" id="baseURL" placeholder="Enter URL with format e.g. http://domain.com/ab12cc22" />
+                        </div>
+                        <div class="form-group d-none">
+                            <label for="pageSize">Page Size</label>
+                            <input type="number" class="form-control" id="pageSize" placeholder="Page Size" value="100" />
+                        </div>
+                        <button type="button" class="btn btn-primary btn-get-terms">Get Terms</button>
+                    </form>
+
+                    <div class='row-terms'>
+                        <div class='terms-url'></div>
+                        <div class='terms-list pt-4'></div>
+                        <div class='term-output'>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
