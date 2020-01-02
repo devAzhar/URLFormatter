@@ -65,7 +65,10 @@
       <table class="table">
         <thead>
         <tr>
-          <th>Alphabetical</th>
+          <th>
+            <spa class='d-none d-md-block'>Alphabetical</spa>
+            <span class='d-md-none'>Alpha</span>
+          </th>
           <th></th>
           <th>Range Start</th>
           <th>Range End</th>
@@ -77,14 +80,14 @@
     data.terms.forEach(element => {
       $html += `
       <tr class='row-term' data-index='${element.index}'>
-        <td>
+        <td class='align-middle'>
           <input type='checkbox' disabled='disabled' ${element.isAlpha ?  'checked' : ''} />
         </td>
-        <td><span class='term alpha-${element.isAlpha}'>${element.term}</span></td>
-        <td>
+        <td class='align-middle'><span class='term alpha-${element.isAlpha}'>${element.term}</span></td>
+        <td class='align-middle'>
           <input max-length='5' type='text' class='form-control text-term text-term-start' value='${element.term}' data-term='${element.term}' data-is-alpha='${element.isAlpha}' data-index='${element.index}' />
         </td>
-        <td>
+        <td class='align-middle'>
           <input max-length='5' type='text' class='form-control text-term text-term-end' value='' data-term='${element.term}' data-is-alpha='${element.isAlpha}' data-index='${element.index}' />
         </td>
       </tr>
