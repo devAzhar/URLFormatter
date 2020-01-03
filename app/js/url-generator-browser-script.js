@@ -284,6 +284,8 @@
           } else {
             $pagers.hide();
           }
+
+          ShowMessage(`Total URL Combinations: ${jsonResponse.info.totalLength}`, 3000, false);
         }
 
         $termsOutputList.html('');
@@ -295,8 +297,6 @@
             $termsOutputList.append(`<li>${domainName}${term}</li>`);
           }
         });
-
-        ShowMessage(`Total URL Combinations: ${jsonResponse.info.totalLength}`, 3000, false);
 
         if (jsonResponse.info.hasMoreRecords) {
           // GenerateUrls(terms, jsonResponse.info.requestToken, (startIndex + pageSize));
