@@ -215,10 +215,12 @@
     return json;
   };
 
-  const GenerateUrls = (terms, requestToken, startIndex) => {
+  const GenerateUrls = (terms, requestToken = '', startIndex = 0) => {
     const url = `${Constants.ApiRoot}${Constants.GenerateApi}`;
-    const pageSize = Constants.MaxTerms;
-    startIndex = startIndex || 0;
+
+    const pageSize = parseInt($('#pageSize').val()) || Constants.MaxTerms;
+
+    startIndex = parseInt(startIndex) || 0;
     requestToken = requestToken || '';
 
     const meta = {startIndex: startIndex, maxTerms: pageSize, requestToken: requestToken};
@@ -241,6 +243,7 @@
 
       success: jsonResponse => {
         ConsoleLog(`Process Data -> Start Index: ${startIndex}`);
+        ConsoleLog(jsonResponse);
         const $termsOutput = $('.term-output');
         
         if (startIndex === 0) {
@@ -254,6 +257,37 @@
         const termsPart = $urlParts.pop();
         const domainName = $baseURL.val().replace(termsPart, '');
   
+        if(requestToken === '') {
+          const $pagers = $('.term-pager');
+          var totalPages = Math.ceil(jsonResponse.info.totalLength/pageSize);
+
+          if (jsonResponse.info.hasMoreRecords && totalPages > 1) {
+            $pagers.show().removeClass('d-none');
+            const $pageList = $pagers.find('.pagination');
+            $pageList.html('');
+
+            for (var pageIndex = 1; pageIndex <= totalPages; pageIndex++) {
+              $pageList.append(`<li data-page="${pageIndex}" class="page-item ${pageIndex === 1 ? 'active' : ''}"><a class="page-link" href="javascript:">${pageIndex}</a></li>`);
+            }
+
+            $pageList.find('li').on('click', evt => {
+              const $activePage = $pageList.find('li.active').data('page');
+              const $this = $(eval('this'));
+              const $page = $this.data('page');
+
+              if ($activePage !== $page) {
+                GenerateUrls(terms, jsonResponse.info.requestToken, (pageSize * ($page - 1)));
+                $pageList.find('li').removeClass('active');
+                $pageList.find(`li[data-page=${$page}]`).addClass('active');
+              }
+            });
+          } else {
+            $pagers.hide();
+          }
+        }
+
+        $termsOutputList.html('');
+
         jsonResponse.data.forEach(term => {
           if (Constants.ShowLinks) {
             $termsOutputList.append(`<li><a target='_blank' href='${domainName}${term}'>${domainName}${term}</a></li>`);
@@ -262,13 +296,11 @@
           }
         });
 
-        // ConsoleLog(data);
-        if (jsonResponse.info.hasMoreRecords) {
-          GenerateUrls(terms, jsonResponse.info.requestToken, (startIndex + pageSize));
-        } else {
-          ShowMessage(`Total URL Combinations: ${jsonResponse.info.totalLength}`, 3000, false);
-        }
+        ShowMessage(`Total URL Combinations: ${jsonResponse.info.totalLength}`, 3000, false);
 
+        if (jsonResponse.info.hasMoreRecords) {
+          // GenerateUrls(terms, jsonResponse.info.requestToken, (startIndex + pageSize));
+        }
       },
       error: (data, _data1, _data2) => {
         ShowMessage(data);
@@ -284,6 +316,7 @@
     $baseURL.on('change', evt => {
       HideMessage();
       $rowTerms.hide();
+      $('.term-pager').hide();
       $('.term-output').html('');
     });
 

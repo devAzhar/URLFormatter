@@ -43,7 +43,7 @@
                             <label for="baseURL">URL</label>
                             <input type="text" class="form-control" id="baseURL" placeholder="Enter URL with format e.g. http://domain.com/ab12cc22" />
                         </div>
-                        <div class="form-group d-none">
+                        <div class="form-group">
                             <label for="pageSize">Page Size</label>
                             <input type="number" class="form-control" id="pageSize" placeholder="Page Size" value="100" />
                         </div>
@@ -53,7 +53,27 @@
                     <div class='row-terms'>
                         <div class='terms-url'></div>
                         <div class='terms-list pt-4'></div>
-                        <div class='term-output'>
+                        
+                        <div class='term-pager d-none'>
+                            <nav aria-label="...">
+                                <ul class="pagination pl-2">
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item active">
+                                    <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a></li>
+                                    <li class="page-item"><a class="page-link" href="javascript:">3</a></li>
+                                </ul>
+                            </nav>                            
+                        </div>
+                        <div class='term-output'></div>
+                        <div class='term-pager d-none'>
+                            <nav aria-label="...">
+                                <ul class="pagination pl-2">
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item active">
+                                    <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a></li>
+                                    <li class="page-item"><a class="page-link" href="javascript:">3</a></li>
+                                </ul>
+                            </nav>                            
                         </div>
                     </div>
                 </div>
