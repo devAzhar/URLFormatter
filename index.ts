@@ -4,7 +4,7 @@ import Hapi from 'hapi';
 import HapiServerSession from 'hapi-server-session';
 import Inert from '@hapi/inert';
 
-import { HelloWorld, GenerateUrls, ExecuteTermRangesHandler } from './app/index.mjs'
+import { HelloWorld, GenerateUrls, ExecuteTermRangesHandler, ConsoleLog } from './app/index.mjs'
 
 const init = async () => {
     const HOST_NAME = `localhost`;
@@ -63,11 +63,11 @@ const init = async () => {
     });
 
     await server.start();
-    console.log(`Server running on ${server.info.uri}`);
+    ConsoleLog(`Server running on ${server.info.uri}`);
 };
 
 process.on('unhandledRejection', (err) => {
-    console.log(err);
+    ConsoleLog(err, true);
     process.exit(1);
 });
 

@@ -5,6 +5,14 @@ export const HelloWorld = (_request, _h) => {
     return {Message: 'HelloWorld!'};
 }
 
+export const ConsoleLog = (msg, isError = false) => {
+    if (isError) {
+        console.error(msg);
+    } else {
+        console.log(msg);
+    }
+}
+
 const isValidElement = element => {
     if(element === '') {
         return false;
@@ -55,11 +63,11 @@ export const ParseTerms = urlFormat => {
 };
 
 export const GenerateUrls = (request, h) => {
-    console.log(`Method: GenerateUrls -> Start ${new Date()}`);
+    ConsoleLog(`Method: GenerateUrls -> Start ${new Date()}`);
     const urlFormat = get(request.params, 'urlFormat', '').trim();
     
     const terms = ParseTerms(urlFormat);
-    console.log(`Method: GenerateUrls -> End ${new Date()}`);
+    ConsoleLog(`Method: GenerateUrls -> End ${new Date()}`);
     return {urlFormat: urlFormat, terms};
     // params: request.params, 
 }
@@ -139,7 +147,7 @@ const getTermArray = ranges => {
                 }
             } else {
                 const listOfTerms = new Array();
-                console.log(`HANDLE -> ${range.rangeStart} -> ${range.rangeEnd}`);
+                ConsoleLog(`HANDLE -> ${range.rangeStart} -> ${range.rangeEnd}`);
 
                 range.rangeStart.split('').forEach((element, index) => {
                     const innerTerms = new Array();
@@ -156,8 +164,8 @@ const getTermArray = ranges => {
 
                 // const temp = [['x', 'y'], ['A','B','C'], ['a','b','c','d']];
                 // const res = cartesianProductOf(temp);
-                // console.log(temp);
-                // console.log(listOfTerms);
+                // ConsoleLog(temp);
+                // ConsoleLog(listOfTerms);
 
                 const res = cartesianProductOf(listOfTerms);
 
@@ -172,7 +180,7 @@ const getTermArray = ranges => {
         }
     });
 
-    // console.log(termsArray);
+    // ConsoleLog(termsArray);
     return termsArray;
 };
 
@@ -195,24 +203,24 @@ export const ExecuteTermRanges = request => {
 
     let data = [];
 
-    console.log(`Trying to load from session - ${new Date()}.`);
+    ConsoleLog(`Trying to load from session - ${new Date()}.`);
     data = get(session, $dataSessionKey, data);
 
     if (data.length === 0) {
-        console.log(`Making the call to => getTermArray`);
+        ConsoleLog(`Making the call to => getTermArray`);
         const terms = getTermArray(ranges);
         data = cartesianProductOf(terms);
 
         set(session, $dataSessionKey, data);
     } else {
-        console.log(`Data Loaded from the session - ${new Date()}.`);
+        ConsoleLog(`Data Loaded from the session - ${new Date()}.`);
     }
 
     const startIndex = meta.startIndex || 0;
     var maxTerms = meta.maxTerms || data.length;
 
-    console.log($token);
-    console.log($dataSessionKey);
+    ConsoleLog($token);
+    ConsoleLog($dataSessionKey);
 
     maxTerms = maxTerms-startIndex > data.length ? data.length : maxTerms;
     const returnData = data.slice(startIndex, startIndex + maxTerms);
@@ -237,6 +245,6 @@ export const ExecuteTermRanges = request => {
         data: returnData,
     };
     } catch (_exp) {
-        console.log(_exp);
+        ConsoleLog(_exp);
     }
 };

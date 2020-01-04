@@ -17,8 +17,12 @@
                 padding-right: 2px;
                 background-color: rgb(238, 158, 158);
             }
-            .term-output ul, term-output ul li {
+            .term-output ul {
                 list-style-type: none;
+                padding-left: 12px;
+            }
+            .term-output ul li input {
+                margin-right: 5px;
             }
         </style>
         
@@ -56,7 +60,7 @@
                         
                         <div class='term-pager d-none'>
                             <nav aria-label="...">
-                                <ul class="pagination pl-2">
+                                <ul class="pagination pl-2 flex-wrap">
                                     <li class="page-item"><a class="page-link" href="#">1</a></li>
                                     <li class="page-item active">
                                     <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a></li>
@@ -67,7 +71,7 @@
                         <div class='term-output'></div>
                         <div class='term-pager d-none'>
                             <nav aria-label="...">
-                                <ul class="pagination pl-2">
+                                <ul class="pagination pl-2 flex-wrap">
                                     <li class="page-item"><a class="page-link" href="#">1</a></li>
                                     <li class="page-item active">
                                     <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a></li>
