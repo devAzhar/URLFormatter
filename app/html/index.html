@@ -37,7 +37,7 @@
                     <div class="alert alert-danger" role="alert"></div>
                 </div>
                 <div class="col-md-12">
-                    <div class='text-center loader d-none'>
+                    <div class='text-center loader-top d-none'>
                         <div class='spinner-border' style='width: 3rem; height: 3rem;' role='status'></div>
                         <div class='spinner-grow' style='width: 3rem; height: 3rem;' role='status'></div>
                     </div>
@@ -54,28 +54,23 @@
                         <button type="button" class="btn btn-primary btn-get-terms">Get Terms</button>
                     </form>
 
-                    <div class='row-terms'>
+                    <div class='row-terms' style="display: none;">
                         <div class='terms-url'></div>
                         <div class='terms-list pt-4'></div>
                         
-                        <div class='term-pager d-none'>
+                        <div class='term-pager'>
                             <nav aria-label="...">
                                 <ul class="pagination pl-2 flex-wrap">
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item active">
-                                    <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a></li>
-                                    <li class="page-item"><a class="page-link" href="javascript:">3</a></li>
                                 </ul>
                             </nav>                            
                         </div>
+                        <div class='term-multi-selection' style="margin-left: 15px; margin-bottom: 10px;display: none;">
+                            <button type="button" class="btn btn-primary btn-open-terms">Open URLs</button>
+                        </div>
                         <div class='term-output'></div>
-                        <div class='term-pager d-none'>
+                        <div class='term-pager'>
                             <nav aria-label="...">
                                 <ul class="pagination pl-2 flex-wrap">
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item active">
-                                    <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a></li>
-                                    <li class="page-item"><a class="page-link" href="javascript:">3</a></li>
                                 </ul>
                             </nav>                            
                         </div>

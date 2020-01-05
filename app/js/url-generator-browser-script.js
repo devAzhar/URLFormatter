@@ -6,9 +6,23 @@
     ShowLinks: true,
     ShowDebugLog: false,
     MaxTerms: 1000,
-    AllowOpenMultipleLinks: true
+    AllowOpenMultipleLinks: true,
+    MaxOpenMultipleLinks: 50
   };
 
+  const showLoader = (show = true) => {
+    if (show) {
+      $('.loader').removeClass('d-none');
+      $('.row-terms').css('opacity', '0.4');
+      $('.btn-generate-urls').prop('disabled', true);
+      $('.term-multi-selection .btn-open-terms').prop('disabled', true);
+    } else {
+      $('.loader').addClass('d-none');
+      $('.row-terms').css('opacity', '1');
+      $('.btn-generate-urls').prop('disabled', false);
+      Constants.ShowLinks && Constants.AllowOpenMultipleLinks && $('.term-multi-selection').show();
+    }
+  }
   const getAsciiValue = data => {
     let result = 0;
 
@@ -92,7 +106,11 @@
     $html += `
           <tr class='row-term-footer'>
             <td colspan='4'>
-              <button type="button" class="btn btn-primary btn-generate-urls">Generate URLs</button>  
+              <button type="button" class="btn btn-primary btn-generate-urls" style='float: left;'>Generate URLs</button>  
+              <div class='loader d-none' style='float: left; margin-left: 10px; margin-top: 5px;'>
+                <div class='spinner-border' style='width: 2rem; height: 2rem;' role='status'></div>
+                <div class='spinner-grow' style='width: 2rem; height: 2rem;' role='status'></div>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -227,13 +245,14 @@
 
         if ($activePage !== $page) {
           generateUrls(terms, jsonResponse.info.requestToken, (pageSize * ($page - 1)), () => {
+            showLoader(false);
             $pageList.find('li').removeClass('active');
             $pageList.find(`li[data-page=${$page}]`).addClass('active');
           });
         }
       });
 
-      $pagers.show().removeClass('d-none');
+      $pagers.show();
     }
   };
   const postAjax = (url, postData) => {
@@ -270,21 +289,33 @@
 
     $termsOutputList.html('');
     jsonResponse.data.forEach(term => {
+      const $link = `${domainName}${term}`;
       if (Constants.ShowLinks) {
         $termsOutputList.append(`
           <li>
-            ${Constants.AllowOpenMultipleLinks ? '<input type="checkbox" />' : ''}
-            <a target='_blank' href='${domainName}${term}'>${domainName}${term}</a>
+            ${Constants.AllowOpenMultipleLinks ? `<input data-link="${$link}" type="checkbox" />` : ''}
+            <a target='_blank' href='${$link}'>${$link}</a>
           </li>`
         );
       } else {
-        $termsOutputList.append(`<li>${domainName}${term}</li>`);
+        $termsOutputList.append(`<li>${$link}</li>`);
       }
     });
+
+    if (Constants.ShowLinks && Constants.AllowOpenMultipleLinks) {
+      const $checkboxes = $termsOutput.find('li input');
+      $checkboxes.on('change', () => {
+        const $totalSelected = $checkboxes.filter(':checked').length;
+        $checkboxes.not(':checked').prop('disabled', $totalSelected >= Constants.MaxOpenMultipleLinks);
+        $('.term-multi-selection .btn-open-terms').prop('disabled', $totalSelected === 0);
+      });
+    }
   }
   const generateUrls = (terms, requestToken = '', startIndex = 0, callBack = null) => {
     startIndex = parseInt(startIndex) || 0;
     requestToken = requestToken || '';
+
+    showLoader();
 
     const url = `${Constants.ApiRoot}${Constants.GenerateApi}`;
     const pageSize = parseInt($('#pageSize').val()) || Constants.MaxTerms;
@@ -307,12 +338,20 @@
       
       displayLinks(jsonResponse);
       callBack && callBack();
+      !callBack && showLoader(false);
     })
     .catch(e => showMessage(e));
   };
   const onDocumentReady = () => {
     const $baseURL = $('#baseURL');
     const $rowTerms = $('.row-terms');
+
+    $('.term-multi-selection .btn-open-terms').on('click', () => {
+      $('.term-output li input:checked').each((_index, $this) => {
+        $this = $($this);
+        $this.data('link') && window.open($this.data('link'));
+      });
+    });
 
     $baseURL.on('change', () => {
       hideMessage();
@@ -331,11 +370,14 @@
         return;
       };
 
-      $rowTerms.show();
       const domainName = $baseURL.val().replace(termsPart, '');
       const url = `${Constants.ApiRoot}${termsPart}`;
 
-      $.get(url).then(data => displayTerms(data, domainName));
+      $.get(url)
+      .then(data => {
+        displayTerms(data, domainName);
+        $rowTerms.show();
+      });
     });
 
     $(document).on('click', '.btn-generate-urls', () => {
