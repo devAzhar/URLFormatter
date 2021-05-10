@@ -8,7 +8,7 @@
     "@hapi/inert": "^5.2.2",
     "hapi": "^18.1.0",
     "hapi-server-session": "^4.3.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "uglify-js": "^3.7.2"
   },
   "devDependencies": {
